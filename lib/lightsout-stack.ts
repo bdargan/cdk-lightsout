@@ -1,9 +1,24 @@
 import cdk = require('@aws-cdk/core');
+import { LightsoutConstruct } from './lightsout-construct'
 
 export class LightsoutStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
-    super(scope, id, props);
+  constructor(scope: cdk.Construct, id: string) {
+    super(scope, id);
 
-    // The code that defines your stack goes here
+    const morningSchedule = {
+      day: '*',
+      minute: '0',
+      hour: '17',
+    }
+
+    const eveningSchedule = {
+      day: '*',
+      minute: '0',
+      hour: '9',
+    }
+
+    new LightsoutConstruct(this, 'test', {
+      cronSchedules: [morningSchedule, eveningSchedule]
+    })
   }
 }

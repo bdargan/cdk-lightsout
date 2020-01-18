@@ -1,0 +1,21 @@
+{
+  "name": "lightsout-lambda",
+  "version": "1.0.0",
+  "description": "Toggle them on or off.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "package": "rm -f $npm_package_name.zip && zip -r $npm_package_name.zip package.json dist node_modules/lodash",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "aws",
+    "cdk",
+    "ec2"
+  ],
+  "author": "bdargan@brettdargan.com",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.15"
+  }
+}
