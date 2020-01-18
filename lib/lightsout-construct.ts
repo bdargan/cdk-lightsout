@@ -1,21 +1,18 @@
 import { Construct, Duration } from '@aws-cdk/core'
 import lambda = require('@aws-cdk/aws-lambda')
 import { ManagedPolicy, Role, ServicePrincipal } from '@aws-cdk/aws-iam'
-import { S3Code } from '@aws-cdk/aws-lambda'
-import { Rule, Schedule, CronOptions } from '@aws-cdk/aws-events'
+import { Rule, Schedule, CronOptions, RuleTargetInput } from '@aws-cdk/aws-events'
 import { LambdaFunction } from '@aws-cdk/aws-events-targets';
 
 const AWS_LAMBDA_DEFAULT_DURATION = 3
 const AWS_LAMBDA_DEFAULT_MEMORY_SIZE = 128
 
 export interface CronLambdaProps {
-  // readonly handler : string,
-  // readonly s3Code : S3Code,
   readonly timeout? : number,
   readonly memory? : number,
   readonly cronSchedules: CronOptions[],
   readonly dryRun?: boolean,
-  readonly tagFilters? : any[]
+  readonly filters? : any[]
 }
 // TODO: Reduce EC2FullAccess
 export class LightsoutConstruct extends Construct {
@@ -43,15 +40,28 @@ export class LightsoutConstruct extends Construct {
     if (props?.dryRun) {
       fn.addEnvironment('DRY_RUN', props.dryRun.toString())
     } else {
-      if (!props?.tagFilters || props?.tagFilters.length == 0) {
+      if (!props?.filters || props?.filters.length == 0) {
         fn.addEnvironment('DRY_RUN', 'true')
       }
     }
 
     props?.cronSchedules?.forEach((opt, idx) => {
+
+      const filters = props?.filters
+      const ruleTargetInput = RuleTargetInput.fromObject({input: filters })
+
+      let targetFn:LambdaFunction
+      let ruleDescription = JSON.stringify(opt)
+      if (!filters) {
+        targetFn = new LambdaFunction(fn)
+      } else {
+        targetFn = new LambdaFunction(fn, { event: ruleTargetInput })
+        ruleDescription = ruleDescription + ' ' + JSON.stringify(filters)
+      }
       new Rule(this, ''+idx, {
+        description: JSON.stringify(opt) + JSON.stringify(filters),
         schedule: Schedule.cron(opt),
-        targets: [new LambdaFunction(fn)]
+        targets: [targetFn]
       })
         
     })

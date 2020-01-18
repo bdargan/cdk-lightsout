@@ -35,7 +35,7 @@ const stopInstances = (instanceIds: string[]) => {
 
 const toggleInstances = (instances: any) => {
   const respHandler = (name:string, resp:any) => {console.log(name + " instances", JSON.stringify(resp, null, 2))}
-  
+
   return stopInstances(instances[RUNNING])
   .then( (_stopResp:any) => {
     respHandler('stopped', _stopResp)
@@ -48,7 +48,10 @@ export const handler = async (event:any, context:any) => {
 
   console.log("event", JSON.stringify(event))
   const ec2 = new AWS.EC2()
-  const params = { }
+  const params:any = {}
+  if (event.filters) {
+    params.Filters = event.filters
+  }
 
   // TODO: handle NextToken
   return ec2.describeInstances(params).promise()
@@ -66,7 +69,5 @@ export const handler = async (event:any, context:any) => {
     console.log("toggling instance states", JSON.stringify(instances, null, 2))
     return toggleInstances(instances)
   })
-
-
-  
+ 
 }

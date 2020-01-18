@@ -8,7 +8,7 @@ export class LightsoutStack extends cdk.Stack {
     const morningSchedule = {
       day: '*',
       minute: '0',
-      hour: '17',
+      hour: '20',
     }
 
     const eveningSchedule = {

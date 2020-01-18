@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "package": "rm -f $npm_package_name.zip && zip -r $npm_package_name.zip package.json dist node_modules/lodash",
+    "prepackage": "rm -f $npm_package_name.zip",
+    "package": "zip -r $npm_package_name.zip package.json dist node_modules/lodash",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
