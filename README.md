@@ -9,12 +9,9 @@ new LightsoutConstruct(this, 'test', {
 })
 ```
 
-## Import into your stack
-
-
 ## Getting Started
 
-## Configure timers
+### Configure timers
 Configure schedules with CloudWatch Event Rules.
 > Remembering all hours are in UTC.
 
@@ -25,7 +22,7 @@ Configure schedules with CloudWatch Event Rules.
       hour: '17',
     }
 ```
-## Filter instances
+### Filter instances
 Use any [describeInstances filters](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/EC2.html#describeInstances-property).
 
 ```typescript
@@ -38,15 +35,15 @@ filters: [
 }
 ]
 ```
-## Dry Run
-Lambda Toggle function supports DRY_RUN environment variable.
+### Dry Run
+Lambda Toggle function supports a DRY_RUN environment variable.
 
 ## Handling Alarms
 - Avoid alarms on instances started/stopped
 
 ## Contributors
 ### Setup
-aws-cdk
+- standard aws-cdk setup
 
 ### References
 - [AWS Construct Library Design Guidelines](https://github.com/aws/aws-cdk/blob/master/design/aws-guidelines.md)

@@ -1,0 +1,199 @@
+{
+  "Resources": {
+      "test0C81AABAF": {
+        "Type": "AWS::Events::Rule",
+        "Properties": {
+          "Description": "{\"day\":\"*\",\"minute\":\"0\",\"hour\":\"20\"}undefined",
+          "ScheduleExpression": "cron(0 20 * * ? *)",
+          "State": "ENABLED",
+          "Targets": [
+            {
+              "Arn": {
+                "Fn::GetAtt": [
+                  "testlightsoutToggleA543F935",
+                  "Arn"
+                ]
+              },
+              "Id": "Target0"
+            }
+          ]
+        }
+      },
+      "test13ADFBD30": {
+        "Type": "AWS::Events::Rule",
+        "Properties": {
+          "Description": "{\"day\":\"*\",\"minute\":\"0\",\"hour\":\"9\"}undefined",
+          "ScheduleExpression": "cron(0 9 * * ? *)",
+          "State": "ENABLED",
+          "Targets": [
+            {
+              "Arn": {
+                "Fn::GetAtt": [
+                  "testlightsoutToggleA543F935",
+                  "Arn"
+                ]
+              },
+              "Id": "Target0"
+            }
+          ]
+        }
+      },
+      "testLightsoutLambdaRoleBB9E8712": {
+        "Type": "AWS::IAM::Role",
+        "Properties": {
+          "AssumeRolePolicyDocument": {
+            "Statement": [
+              {
+                "Action": "sts:AssumeRole",
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": "lambda.amazonaws.com"
+                }
+              }
+            ],
+            "Version": "2012-10-17"
+          },
+          "ManagedPolicyArns": [
+            {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:",
+                  {
+                    "Ref": "AWS::Partition"
+                  },
+                  ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                ]
+              ]
+            },
+            {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:",
+                  {
+                    "Ref": "AWS::Partition"
+                  },
+                  ":iam::aws:policy/AmazonEC2FullAccess"
+                ]
+              ]
+            }
+          ]
+        }
+      },
+      "testlightsoutToggleA543F935": {
+        "Type": "AWS::Lambda::Function",
+        "Properties": {
+          "Code": {
+            "S3Bucket": {
+              "Ref": "AssetParametersd01260b876a41cfb56724f777ca44258ec098a1f4818a741166058690f3374fbS3Bucket0B3C4370"
+            },
+            "S3Key": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Fn::Select": [
+                      0,
+                      {
+                        "Fn::Split": [
+                          "||",
+                          {
+                            "Ref": "AssetParametersd01260b876a41cfb56724f777ca44258ec098a1f4818a741166058690f3374fbS3VersionKeyDCBF7964"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "Fn::Select": [
+                      1,
+                      {
+                        "Fn::Split": [
+                          "||",
+                          {
+                            "Ref": "AssetParametersd01260b876a41cfb56724f777ca44258ec098a1f4818a741166058690f3374fbS3VersionKeyDCBF7964"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              ]
+            }
+          },
+          "Handler": "dist/index.handler",
+          "Role": {
+            "Fn::GetAtt": [
+              "testLightsoutLambdaRoleBB9E8712",
+              "Arn"
+            ]
+          },
+          "Runtime": "nodejs10.x",
+          "Description": "Lightsout Lambda will toggle your stop and start instance states",
+          "Environment": {
+            "Variables": {
+              "DRY_RUN": "true"
+            }
+          },
+          "MemorySize": 128,
+          "Timeout": 3
+        },
+        "DependsOn": [
+          "testLightsoutLambdaRoleBB9E8712"
+        ]
+      },
+      "testlightsoutToggleAllowEventRuletest0A5EBA1026FA45E25": {
+        "Type": "AWS::Lambda::Permission",
+        "Properties": {
+          "Action": "lambda:InvokeFunction",
+          "FunctionName": {
+            "Fn::GetAtt": [
+              "testlightsoutToggleA543F935",
+              "Arn"
+            ]
+          },
+          "Principal": "events.amazonaws.com",
+          "SourceArn": {
+            "Fn::GetAtt": [
+              "test0C81AABAF",
+              "Arn"
+            ]
+          }
+        }
+      },
+      "testlightsoutToggleAllowEventRuletest17C6901CDE41EEEE3": {
+        "Type": "AWS::Lambda::Permission",
+        "Properties": {
+          "Action": "lambda:InvokeFunction",
+          "FunctionName": {
+            "Fn::GetAtt": [
+              "testlightsoutToggleA543F935",
+              "Arn"
+            ]
+          },
+          "Principal": "events.amazonaws.com",
+          "SourceArn": {
+            "Fn::GetAtt": [
+              "test13ADFBD30",
+              "Arn"
+            ]
+          }
+        }
+      }
+    },
+    "Parameters": {
+      "AssetParametersd01260b876a41cfb56724f777ca44258ec098a1f4818a741166058690f3374fbS3Bucket0B3C4370": {
+        "Type": "String",
+        "Description": "S3 bucket for asset \"d01260b876a41cfb56724f777ca44258ec098a1f4818a741166058690f3374fb\""
+      },
+      "AssetParametersd01260b876a41cfb56724f777ca44258ec098a1f4818a741166058690f3374fbS3VersionKeyDCBF7964": {
+        "Type": "String",
+        "Description": "S3 key for asset version \"d01260b876a41cfb56724f777ca44258ec098a1f4818a741166058690f3374fb\""
+      },
+      "AssetParametersd01260b876a41cfb56724f777ca44258ec098a1f4818a741166058690f3374fbArtifactHashA1BDE853": {
+        "Type": "String",
+        "Description": "Artifact hash for asset \"d01260b876a41cfb56724f777ca44258ec098a1f4818a741166058690f3374fb\""
+      }
+    }
+}
