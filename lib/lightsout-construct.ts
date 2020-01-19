@@ -8,9 +8,9 @@ const AWS_LAMBDA_DEFAULT_DURATION = 3
 const AWS_LAMBDA_DEFAULT_MEMORY_SIZE = 128
 
 export interface CronLambdaProps {
+  readonly cronSchedules: CronOptions[],
   readonly timeout? : number,
   readonly memory? : number,
-  readonly cronSchedules: CronOptions[],
   readonly dryRun?: boolean,
   readonly filters? : any[]
 }
