@@ -1,6 +1,7 @@
 {
   "name": "cdk-lightsout",
   "version": "0.1.0",
+  "description": "AWS CDK Construct to schedule instances to be toggled on and off.",
   "bin": {
     "lightsout": "bin/lightsout.js"
   },
